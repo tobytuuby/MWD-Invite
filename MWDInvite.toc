@@ -1,0 +1,9 @@
+## Interface: 120000
+## Title: MWD Invite to Play
+## Notes: Quickly invite guild members to your party or raid.
+## Author: Epsilon Paradox
+## Version: 0.1.0
+## SavedVariables: MWDInviteDB
+## OptionalDeps: Guild_Roster_Manager
+
+MWDInvite.lua
