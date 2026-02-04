@@ -23,4 +23,5 @@ A World of Warcraft addon that helps you quickly invite guild members to your pa
 - No build step required. Edit the Lua/XML files directly.
 
 ## License
-- Add your license here (or state "All rights reserved").
+- GNU GPL v3.0
+
