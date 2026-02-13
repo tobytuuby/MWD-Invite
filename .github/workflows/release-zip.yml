@@ -15,10 +15,16 @@ jobs:
 
       - name: Create zip
         run: |
-          mkdir -p package/MWDInvite
-          rsync -av --exclude ".git" --exclude ".github" --exclude "dist" ./ package/MWDInvite/
-          cd package
-          zip -r ../MWDInvite-${GITHUB_REF_NAME}.zip MWDInvite
+          staging="$(mktemp -d)"
+          mkdir -p "$staging/MWDInvite"
+          rsync -av \
+            --exclude ".git" \
+            --exclude ".github" \
+            --exclude "dist" \
+            --exclude "package" \
+            ./ "$staging/MWDInvite/"
+          cd "$staging"
+          zip -r "$GITHUB_WORKSPACE/MWDInvite-${GITHUB_REF_NAME}.zip" MWDInvite
 
       - name: Publish GitHub release asset
         uses: softprops/action-gh-release@v2
