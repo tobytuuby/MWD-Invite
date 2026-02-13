@@ -1,0 +1,8 @@
+package-as: MWDInvite
+enable-toc-creation: yes
+
+ignore:
+  - .github
+  - .gitignore
+  - README.md
+  - LICENSE
