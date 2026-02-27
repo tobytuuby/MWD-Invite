@@ -588,7 +588,7 @@ local function CreateAddonWindow()
   scrollFrame:SetPoint("TOPLEFT", 6, -(6 + headerHeight))
   scrollFrame:SetPoint("BOTTOMRIGHT", -28, 6)
 
-  local rowHeight = 20
+  local rowHeight = 24
   local rows = {}
   local visibleRows = math.max(1, math.floor((listFrame:GetHeight() - (headerHeight + 12)) / rowHeight))
   for i = 1, visibleRows do
