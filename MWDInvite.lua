@@ -452,7 +452,7 @@ end
 EnsureDefaults()
 local function CreateAddonWindow()
   local window = CreateFrame("Frame", "MWDInviteWindow", UIParent, "BasicFrameTemplateWithInset")
-  window:SetSize(560, 680)
+  window:SetSize(560, 620)
   window:SetPoint("CENTER")
   window:SetMovable(true)
   window:EnableMouse(true)
@@ -518,7 +518,7 @@ local function CreateAddonWindow()
 
   local listFrame = CreateFrame("Frame", nil, window, "InsetFrameTemplate3")
   listFrame:SetPoint("TOPLEFT", listHeader, "BOTTOMLEFT", 0, -6)
-  listFrame:SetSize(528, 420)
+  listFrame:SetSize(528, 360)
 
   local headerHeight = 18
   local headerRow = CreateFrame("Frame", nil, listFrame)
