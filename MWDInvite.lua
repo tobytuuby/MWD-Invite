@@ -42,6 +42,73 @@ local function GetAddonVersion()
   return "Unknown"
 end
 
+local function CreateAboutWindow()
+  local about = CreateFrame("Frame", "MWDInviteAboutWindow", UIParent, "BasicFrameTemplateWithInset")
+  about:SetSize(430, 160)
+  about:SetPoint("CENTER")
+  about:SetMovable(true)
+  about:EnableMouse(true)
+  about:RegisterForDrag("LeftButton")
+  about:SetScript("OnDragStart", about.StartMoving)
+  about:SetScript("OnDragStop", about.StopMovingOrSizing)
+  about:Hide()
+
+  about.TitleText:SetText("MWD Invite - About")
+
+  local aboutUrlBox = CreateFrame("EditBox", nil, about, "InputBoxTemplate")
+  aboutUrlBox:SetPoint("TOPLEFT", 12, -40)
+  aboutUrlBox:SetSize(300, 20)
+  aboutUrlBox:SetAutoFocus(false)
+  aboutUrlBox:SetText(REPORT_BUG_URL)
+  aboutUrlBox:HighlightText(0)
+  aboutUrlBox:SetCursorPosition(0)
+  aboutUrlBox:SetScript("OnEscapePressed", function(self)
+    self:ClearFocus()
+  end)
+  aboutUrlBox:SetScript("OnEditFocusGained", function(self)
+    self:HighlightText()
+  end)
+  aboutUrlBox:SetScript("OnTextChanged", function(self, userInput)
+    if userInput then
+      self:SetText(REPORT_BUG_URL)
+      self:HighlightText()
+    end
+  end)
+
+  local aboutLabel = about:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+  aboutLabel:SetPoint("LEFT", aboutUrlBox, "RIGHT", 10, 0)
+  aboutLabel:SetJustifyH("LEFT")
+  aboutLabel:SetText("Report a Bug")
+
+  local divider = about:CreateTexture(nil, "ARTWORK")
+  divider:SetColorTexture(1, 1, 1, 0.15)
+  divider:SetPoint("TOPLEFT", 12, -70)
+  divider:SetPoint("TOPRIGHT", -12, -70)
+  divider:SetHeight(1)
+
+  local authorHeader = about:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+  authorHeader:SetPoint("TOPLEFT", 16, -84)
+  authorHeader:SetText("Author")
+  authorHeader:SetTextColor(1, 0.82, 0)
+
+  local authorValue = about:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
+  authorValue:SetPoint("TOPLEFT", authorHeader, "BOTTOMLEFT", 0, -2)
+  authorValue:SetText(ABOUT_AUTHOR)
+
+  local versionHeader = about:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+  versionHeader:SetPoint("LEFT", authorHeader, "RIGHT", 190, 0)
+  versionHeader:SetText("Version")
+  versionHeader:SetTextColor(1, 0.82, 0)
+
+  local versionValue = about:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
+  versionValue:SetPoint("TOPLEFT", versionHeader, "BOTTOMLEFT", 0, -2)
+  versionValue:SetText(GetAddonVersion())
+
+  about.urlBox = aboutUrlBox
+  about.versionValue = versionValue
+  return about
+end
+
 local function GetGuildKey()
   local guildName, _, _, realmName = GetGuildInfo("player")
   if not guildName then
@@ -385,7 +452,7 @@ end
 EnsureDefaults()
 local function CreateAddonWindow()
   local window = CreateFrame("Frame", "MWDInviteWindow", UIParent, "BasicFrameTemplateWithInset")
-  window:SetSize(560, 770)
+  window:SetSize(560, 680)
   window:SetPoint("CENTER")
   window:SetMovable(true)
   window:EnableMouse(true)
@@ -615,13 +682,15 @@ local function CreateAddonWindow()
   closeBtn:SetText("Close")
   closeBtn:SetScript("OnClick", function() window:Hide() end)
 
+  local aboutWindow = CreateAboutWindow()
+
   local aboutBtn = CreateFrame("Button", nil, window, "GameMenuButtonTemplate")
-  aboutBtn:SetPoint("LEFT", closeBtn, "RIGHT", 8, 0)
-  aboutBtn:SetSize(80, 26)
+  aboutBtn:SetPoint("TOPRIGHT", window, "TOPRIGHT", -34, -32)
+  aboutBtn:SetSize(70, 22)
   aboutBtn:SetText("About")
 
   local minimapCheck = CreateFrame("CheckButton", nil, window, "UICheckButtonTemplate")
-  minimapCheck:SetPoint("LEFT", aboutBtn, "RIGHT", 8, 0)
+  minimapCheck:SetPoint("LEFT", closeBtn, "RIGHT", 8, 0)
   minimapCheck.text:SetText("Show minimap button")
   minimapCheck:SetChecked(MWDInviteDB.minimap.show)
   minimapCheck:SetScript("OnClick", function(self)
@@ -635,63 +704,23 @@ local function CreateAddonWindow()
     end
   end)
 
-  local aboutFrame = CreateFrame("Frame", nil, window, "InsetFrameTemplate3")
-  aboutFrame:SetPoint("TOPLEFT", clearBtn, "BOTTOMLEFT", 0, -8)
-  aboutFrame:SetSize(420, 84)
-  aboutFrame:Hide()
-
-  local aboutUrlBox = CreateFrame("EditBox", nil, aboutFrame, "InputBoxTemplate")
-  aboutUrlBox:SetPoint("TOPLEFT", 10, -10)
-  aboutUrlBox:SetSize(300, 20)
-  aboutUrlBox:SetAutoFocus(false)
-  aboutUrlBox:SetText(REPORT_BUG_URL)
-  aboutUrlBox:HighlightText(0)
-  aboutUrlBox:SetCursorPosition(0)
-  aboutUrlBox:SetScript("OnEscapePressed", function(self)
-    self:ClearFocus()
-  end)
-  aboutUrlBox:SetScript("OnEditFocusGained", function(self)
-    self:HighlightText()
-  end)
-  aboutUrlBox:SetScript("OnTextChanged", function(self, userInput)
-    if userInput then
-      self:SetText(REPORT_BUG_URL)
-      self:HighlightText()
+  aboutBtn:SetScript("OnClick", function()
+    if aboutWindow:IsShown() then
+      aboutWindow:Hide()
+    else
+      aboutWindow:ClearAllPoints()
+      aboutWindow:SetPoint("TOPLEFT", window, "TOPRIGHT", 8, 0)
+      aboutWindow.urlBox:SetText(REPORT_BUG_URL)
+      aboutWindow.versionValue:SetText(GetAddonVersion())
+      aboutWindow:Show()
+      aboutWindow.urlBox:SetFocus()
+      aboutWindow.urlBox:HighlightText()
     end
   end)
 
-  local aboutLabel = aboutFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-  aboutLabel:SetPoint("LEFT", aboutUrlBox, "RIGHT", 10, 0)
-  aboutLabel:SetJustifyH("LEFT")
-  aboutLabel:SetText("Report a Bug")
-
-  local authorHeader = aboutFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
-  authorHeader:SetPoint("TOPLEFT", 10, -42)
-  authorHeader:SetText("Author")
-  authorHeader:SetTextColor(1, 0.82, 0)
-
-  local authorValue = aboutFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
-  authorValue:SetPoint("TOPLEFT", authorHeader, "BOTTOMLEFT", 0, -2)
-  authorValue:SetText(ABOUT_AUTHOR)
-
-  local versionHeader = aboutFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
-  versionHeader:SetPoint("LEFT", authorHeader, "RIGHT", 180, 0)
-  versionHeader:SetText("Version")
-  versionHeader:SetTextColor(1, 0.82, 0)
-
-  local versionValue = aboutFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
-  versionValue:SetPoint("TOPLEFT", versionHeader, "BOTTOMLEFT", 0, -2)
-  versionValue:SetText(GetAddonVersion())
-
-  aboutBtn:SetScript("OnClick", function()
-    if aboutFrame:IsShown() then
-      aboutFrame:Hide()
-    else
-      aboutFrame:Show()
-      aboutUrlBox:SetText(REPORT_BUG_URL)
-      versionValue:SetText(GetAddonVersion())
-      aboutUrlBox:SetFocus()
-      aboutUrlBox:HighlightText()
+  window:HookScript("OnHide", function()
+    if aboutWindow and aboutWindow:IsShown() then
+      aboutWindow:Hide()
     end
   end)
 
