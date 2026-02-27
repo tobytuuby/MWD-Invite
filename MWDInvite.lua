@@ -590,7 +590,8 @@ local function CreateAddonWindow()
 
   local rowHeight = 20
   local rows = {}
-  for i = 1, 18 do
+  local visibleRows = math.max(1, math.floor((listFrame:GetHeight() - (headerHeight + 12)) / rowHeight))
+  for i = 1, visibleRows do
     local row = CreateFrame("Button", nil, listFrame)
     row:SetHeight(rowHeight)
     row:SetPoint("TOPLEFT", 6, -(6 + headerHeight) - (i - 1) * rowHeight)
@@ -646,7 +647,7 @@ local function CreateAddonWindow()
   end
 
   local countText = window:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
-  countText:SetPoint("TOPRIGHT", listFrame, "BOTTOMRIGHT", -8, -6)
+  countText:SetPoint("BOTTOMRIGHT", listFrame, "BOTTOMRIGHT", -8, 8)
   countText:SetText("0 members")
 
   local partyBtn = CreateFrame("Button", nil, window, "GameMenuButtonTemplate")
