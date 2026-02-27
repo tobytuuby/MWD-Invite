@@ -385,7 +385,7 @@ end
 EnsureDefaults()
 local function CreateAddonWindow()
   local window = CreateFrame("Frame", "MWDInviteWindow", UIParent, "BasicFrameTemplateWithInset")
-  window:SetSize(560, 680)
+  window:SetSize(560, 770)
   window:SetPoint("CENTER")
   window:SetMovable(true)
   window:EnableMouse(true)
