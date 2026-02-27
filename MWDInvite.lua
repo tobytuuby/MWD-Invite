@@ -54,6 +54,7 @@ local function CreateAboutWindow()
   about:Hide()
 
   about.TitleText:SetText("MWD Invite - About")
+  table.insert(UISpecialFrames, "MWDInviteAboutWindow")
 
   local aboutUrlBox = CreateFrame("EditBox", nil, about, "InputBoxTemplate")
   aboutUrlBox:SetPoint("TOPLEFT", 12, -40)
@@ -460,6 +461,7 @@ local function CreateAddonWindow()
   window:SetScript("OnDragStart", window.StartMoving)
   window:SetScript("OnDragStop", window.StopMovingOrSizing)
   window:Hide()
+  table.insert(UISpecialFrames, "MWDInviteWindow")
 
   window.TitleText:SetText("MWD Invite to Play")
 
